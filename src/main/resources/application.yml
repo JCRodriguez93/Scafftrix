@@ -1,0 +1,32 @@
+spring.application.name: scafftrix
+server.port: 8090
+server.servlet.encoding.charset: UTF-8
+server.servlet.encoding.enabled: true
+server.servlet.encoding.force: true
+spring.mvc.format.date-time: iso
+spring.thymeleaf.cache: false
+spring.datasource.url: jdbc:h2:file:./data/scafftrix;DB_CLOSE_DELAY=-1;DB_CLOSE_ON_EXIT=FALSE
+spring.datasource.driver-class-name: org.h2.Driver
+spring.datasource.username: sa
+spring.datasource.password: ''
+spring.jpa.hibernate.ddl-auto: update
+spring.jpa.show-sql: false
+spring.h2.console.enabled: false
+scafftrix:
+  workspace.path: ./workspace
+  workspace.project-folder-name: project
+  defaults.group-id: es.scafftrix
+  defaults.version: 1.0.0-SNAPSHOT
+  defaults.spring-boot-version: "4.1.1"
+  versions.spring-boot:
+    - "4.2.0-SNAPSHOT"
+    - "4.2.0-M2"
+    - "4.1.2-SNAPSHOT"
+    - "4.1.1"
+    - "4.0.9-SNAPSHOT"
+    - "4.0.8"
+  generation.timeout: PT15M
+  generation.concurrency: 1
+  generation.max-artifact-size-mb: 200
+logging.level.es.scafftrix.factory: INFO
+logging.file.name: logs/scafftrix.log

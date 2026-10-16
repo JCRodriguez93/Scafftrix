@@ -1,0 +1,147 @@
+<!DOCTYPE html>
+<html lang="es" xmlns:th="http://www.thymeleaf.org"
+      th:replace="~{layout/main :: layout('Crear nuevo proyecto · Scafftrix', ~{::section})}">
+<head>
+    <meta charset="utf-8"/>
+    <title>Crear nuevo proyecto · Scafftrix</title>
+</head>
+<body>
+<section>
+    <h1>Crear nuevo proyecto</h1>
+    <form th:action="@{/projects}" method="post" th:object="${request}" class="form-grid">
+        <div class="alert alert-error full" th:if="${#fields.hasAnyErrors()}">
+            <strong>No se ha podido crear el proyecto.</strong>
+            <ul>
+                <li th:each="err : ${#fields.allErrors()}" th:text="${err}"></li>
+            </ul>
+        </div>
+        <div class="card">
+            <div class="card-header">
+                <h2>Información general</h2>
+                <p>Introduce los datos del proyecto. El sistema derivará automáticamente los valores técnicos si los dejas vacíos.</p>
+            </div>
+            <div class="card-body grid-2">
+                <div class="field">
+                    <label for="name">Nombre del proyecto</label>
+                    <input id="name" type="text" th:field="*{name}" placeholder="Ej. Gestión de Clientes"/>
+                    <div class="field-error" th:if="${#fields.hasErrors('name')}" th:errors="*{name}"></div>
+                </div>
+                <div class="field">
+                    <label for="projectType">Tipo de proyecto</label>
+                    <select id="projectType" th:field="*{projectType}">
+                        <option value="">Selecciona un tipo</option>
+                        <option th:each="type : ${T(es.scafftrix.factory.domain.ProjectType).values()}"
+                                th:value="${type}"
+                                th:text="${type.displayName}"
+                                th:attr="data-database=${type.databaseLabel},
+                                         data-frontend=${type.frontendLabel},
+                                         data-build=${type.buildToolLabel},
+                                         data-contract=${type.contractFirst},
+                                         data-format=${type.defaultConfigFormat},
+                                         data-note=${type.technologyNote}"></option>
+                    </select>
+                    <div class="field-error" th:if="${#fields.hasErrors('projectType')}" th:errors="*{projectType}"></div>
+                </div>
+                <div class="field full">
+                    <label for="description">Descripción (opcional)</label>
+                    <textarea id="description" rows="3" th:field="*{description}"
+                              placeholder="Qué resuelve este proyecto, para quién..."></textarea>
+                    <div class="field-help">Se copia en la descripción del pom.xml del proyecto generado.
+                        Si la dejas vacía se usa la descripción por defecto del tipo de proyecto.</div>
+                    <div class="field-error" th:if="${#fields.hasErrors('description')}" th:errors="*{description}"></div>
+                </div>
+            </div>
+        </div>
+
+        <div class="card">
+            <div class="card-header">
+                <h2>Información Maven</h2>
+                <p>Coordenadas del proyecto. Se autocompletan a partir del nombre si no los especificas.</p>
+            </div>
+            <div class="card-body grid-2">
+                <div class="field">
+                    <label for="groupId">Group ID</label>
+                    <input id="groupId" type="text" th:field="*{groupId}" placeholder="es.scafftrix"/>
+                    <div class="field-help">Dominio invertido corporativo. No puede empezar por espacios reservados.</div>
+                    <div class="field-error" th:if="${#fields.hasErrors('groupId')}" th:errors="*{groupId}"></div>
+                </div>
+                <div class="field">
+                    <label for="artifactId">Artifact ID (opcional)</label>
+                    <input id="artifactId" type="text" th:field="*{artifactId}" placeholder="customer-management"/>
+                    <div class="field-help">kebab-case. Se deriva del nombre si se deja vacío.</div>
+                    <div class="field-error" th:if="${#fields.hasErrors('artifactId')}" th:errors="*{artifactId}"></div>
+                </div>
+                <div class="field">
+                    <label for="baseName">Base name (opcional)</label>
+                    <input id="baseName" type="text" th:field="*{baseName}" placeholder="customerManagement"/>
+                    <div class="field-help">camelCase, igual que el nombre de la clase principal. Se deriva del nombre si se deja vacío.</div>
+                    <div class="field-error" th:if="${#fields.hasErrors('baseName')}" th:errors="*{baseName}"></div>
+                </div>
+                <div class="field">
+                    <label for="packageName">Package name (opcional)</label>
+                    <input id="packageName" type="text" th:field="*{packageName}" placeholder="es.scafftrix.customermanagement"/>
+                    <div class="field-help">Se deriva de Group ID + base name si se deja vacío.</div>
+                    <div class="field-error" th:if="${#fields.hasErrors('packageName')}" th:errors="*{packageName}"></div>
+                </div>
+                <div class="field">
+                    <label for="version">Versión del proyecto</label>
+                    <input id="version" type="text" th:field="*{version}" placeholder="1.0.0-SNAPSHOT"/>
+                    <div class="field-help">Coordenada Maven del proyecto generado (independiente de la versión de Spring Boot). Por defecto 1.0.0-SNAPSHOT.</div>
+                    <div class="field-error" th:if="${#fields.hasErrors('version')}" th:errors="*{version}"></div>
+                </div>
+            </div>
+        </div>
+
+        <div class="card">
+            <div class="card-header">
+                <h2>Configuración técnica</h2>
+                <p>El stack lo fija el tipo de proyecto; la versión de Spring Boot y el formato de configuración sí son seleccionables.</p>
+            </div>
+            <div class="card-body grid-2">
+                <div class="field">
+                    <label for="springBootVersion">Versión de Spring Boot</label>
+                    <select id="springBootVersion" th:field="*{springBootVersion}">
+                        <option th:each="v : ${springBootVersions}" th:value="${v}" th:text="${v}"></option>
+                    </select>
+                    <div class="field-help">Versión del framework con el que se compila el proyecto (no es la versión del proyecto). Se sustituye en el pom.xml generado; las versiones pre-release añaden los repositorios de Spring.</div>
+                    <div class="field-error" th:if="${#fields.hasErrors('springBootVersion')}" th:errors="*{springBootVersion}"></div>
+                </div>
+                <div class="field">
+                    <label for="configFormat">Formato de configuración</label>
+                    <select id="configFormat" th:field="*{configFormat}">
+                        <option th:each="f : ${configFormats}" th:value="${f}" th:text="${f.displayName}"></option>
+                    </select>
+                    <div class="field-help">application.properties o application.yml en el proyecto generado.</div>
+                </div>
+            </div>
+            <div class="card-body">
+                <div class="tech-grid" id="tech-panel">
+                    <div class="tech-item">
+                        <span class="tech-label">Base de datos</span>
+                        <span class="tech-value" id="tech-database">—</span>
+                    </div>
+                    <div class="tech-item">
+                        <span class="tech-label">Frontend</span>
+                        <span class="tech-value" id="tech-frontend">—</span>
+                    </div>
+                    <div class="tech-item">
+                        <span class="tech-label">Herramienta de build</span>
+                        <span class="tech-value" id="tech-build">—</span>
+                    </div>
+                    <div class="tech-item">
+                        <span class="tech-label">Contract-first</span>
+                        <span class="tech-value" id="tech-contract">—</span>
+                    </div>
+                </div>
+                <p class="tech-note" id="tech-note">Selecciona un tipo de proyecto para ver su stack fijo.</p>
+            </div>
+        </div>
+
+        <div class="form-actions">
+            <a class="btn btn-secondary" th:href="@{/}">Cancelar</a>
+            <button type="submit" class="btn btn-primary">Generar proyecto</button>
+        </div>
+    </form>
+</section>
+</body>
+</html>

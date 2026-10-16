@@ -1,0 +1,26 @@
+# Contexto de build: solo lo necesario para compilar el JAR.
+# Sin esto, `COPY .` (o el COPY por defecto de maven:go-offline) arrastra
+# target/, la base de datos H2 local y los logs a la imagen.
+
+.git
+.github
+.gitattributes
+
+# Artefactos de la compilacion local: nunca deben entrar en la imagen
+target/
+
+# Estado local: base de datos H2, logs y proyectos ya generados
+data/
+logs/
+workspace/
+
+# Documentacion y ficheros de desarrollo
+*.md
+.idea/
+.vscode/
+
+# Ficheros de despliegue (el build los recibe por ARG, no por COPY)
+Dockerfile
+.dockerignore
+docker-compose.yml
+docker-compose.*.yml

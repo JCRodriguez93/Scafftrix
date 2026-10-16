@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="es" xmlns:th="http://www.thymeleaf.org"
+      th:replace="~{layout/main :: layout('Dashboard · Scafftrix', ~{::section})}">
+<head>
+    <meta charset="utf-8"/>
+    <title>Dashboard · Scafftrix</title>
+</head>
+<body>
+<section>
+    <div class="hero">
+        <div class="hero-content">
+            <h1>Scafftrix</h1>
+            <p>Genera proyectos Java estandarizados en cuestión de minutos.
+                Cada perfil se genera desde una plantilla corporativa que ya cumple el estándar tecnológico.</p>
+            <div class="hero-actions">
+                <a class="btn btn-primary" th:href="@{/projects/new}">+ Crear nuevo proyecto</a>
+                <a class="btn btn-secondary" th:href="@{/projects}">Ver mis proyectos</a>
+            </div>
+        </div>
+        <div class="hero-card">
+            <div class="kpi-grid">
+                <div class="kpi">
+                    <span class="kpi-value" th:text="${stats.totalProjects}">0</span>
+                    <span class="kpi-label">Proyectos generados</span>
+                </div>
+                <div class="kpi">
+                    <span class="kpi-value" th:text="${stats.springBootProjects}">0</span>
+                    <span class="kpi-label">Spring Boot</span>
+                </div>
+                <div class="kpi">
+                    <span class="kpi-value" th:text="${stats.springBatchProjects}">0</span>
+                    <span class="kpi-label">Spring Batch</span>
+                </div>
+                <div class="kpi">
+                    <span class="kpi-value" th:text="${stats.springMicroserviceProjects}">0</span>
+                    <span class="kpi-label">Microservicios</span>
+                </div>
+                <div class="kpi">
+                    <span class="kpi-value" th:text="${stats.generatedToday}">0</span>
+                    <span class="kpi-label">Generados hoy</span>
+                </div>
+            </div>
+<div class="status-strip">
+                <span>Perfiles disponibles:</span>
+                <span class="badge badge-success">Spring Boot, Spring Batch y Microservicio</span>
+            </div>
+        </div>
+    </div>
+
+    <div class="card">
+        <div class="card-header">
+            <h2>¿Qué quieres hacer?</h2>
+        </div>
+        <div class="card-body actions-grid">
+            <a class="action-card" th:href="@{/projects/new}">
+                <div class="action-title">Crear proyecto</div>
+                <div class="action-desc">Configura nombre, tipo y coordenadas Maven, y genera un proyecto base.</div>
+            </a>
+            <a class="action-card" th:href="@{/projects}">
+                <div class="action-title">Mis proyectos</div>
+                <div class="action-desc">Busca, filtra y descarga los proyectos generados anteriormente.</div>
+            </a>
+        </div>
+    </div>
+</section>
+</body>
+</html>

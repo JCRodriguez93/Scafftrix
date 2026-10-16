@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="es" xmlns:th="http://www.thymeleaf.org"
+      th:replace="~{layout/main :: layout('Editar proyecto · ' + ${detail.name} + ' · Scafftrix', ~{::section})}">
+<head>
+    <meta charset="utf-8"/>
+    <title>Editar proyecto · Scafftrix</title>
+</head>
+<body>
+<section>
+    <div class="page-header">
+        <div>
+            <h1>Editar proyecto</h1>
+            <p th:text="${detail.name}">Proyecto</p>
+        </div>
+        <div class="header-actions">
+            <span class="badge" th:text="${detail.status}">CREATED</span>
+        </div>
+    </div>
+
+    <form th:action="@{/projects/{id}(id=${detail.id})}" method="post" th:object="${request}" class="form-grid">
+        <div class="alert alert-error full" th:if="${#fields.hasAnyErrors()}">
+            <strong>No se ha podido guardar el proyecto.</strong>
+            <ul>
+                <li th:each="err : ${#fields.allErrors()}" th:text="${err}"></li>
+            </ul>
+        </div>
+
+        <div class="card">
+            <div class="card-header">
+                <h2>Datos editables</h2>
+                <p>Solo se pueden modificar los datos descriptivos y la versión del proyecto.</p>
+            </div>
+            <div class="card-body grid-2">
+                <div class="field">
+                    <label for="name">Nombre del proyecto</label>
+                    <input id="name" type="text" th:field="*{name}" placeholder="Ej. Gestión de Clientes"/>
+                    <div class="field-help">Nombre legible para humanos.</div>
+                    <div class="field-error" th:if="${#fields.hasErrors('name')}" th:errors="*{name}"></div>
+                </div>
+                <div class="field">
+                    <label for="version">Versión del proyecto</label>
+                    <input id="version" type="text" th:field="*{version}" placeholder="1.0.0-SNAPSHOT"/>
+                    <div class="field-help">Coordenada Maven del proyecto generado. Por defecto 1.0.0-SNAPSHOT.</div>
+                    <div class="field-error" th:if="${#fields.hasErrors('version')}" th:errors="*{version}"></div>
+                </div>
+                <div class="field full">
+                    <label for="description">Descripción (opcional)</label>
+                    <textarea id="description" rows="3" th:field="*{description}"
+                              placeholder="Breve descripción del proyecto..."></textarea>
+                    <div class="field-error" th:if="${#fields.hasErrors('description')}" th:errors="*{description}"></div>
+                </div>
+            </div>
+        </div>
+
+        <div class="card">
+            <div class="card-header">
+                <h2>Datos técnicos (solo lectura)</h2>
+                <p>El tipo de proyecto, el stack fijado y las coordenadas del código generado no se pueden cambiar: definen la estructura del proyecto.</p>
+            </div>
+            <div class="card-body grid-2">
+                <div class="info-row"><span>Tipo de proyecto</span><span th:text="${detail.projectType.displayName}"></span></div>
+                <div class="info-row"><span>Estado</span><span th:text="${detail.status}"></span></div>
+                <div class="info-row"><span>Group ID</span><span th:text="${detail.groupId}"></span></div>
+                <div class="info-row"><span>Artifact ID</span><span th:text="${detail.artifactId}"></span></div>
+                <div class="info-row"><span>Base name</span><span th:text="${detail.baseName}"></span></div>
+                <div class="info-row"><span>Package</span><span th:text="${detail.packageName}"></span></div>
+                <div class="info-row"><span>Versión de Spring Boot</span><span th:text="${detail.springBootVersion} ?: '—'"></span></div>
+                <div class="info-row"><span>Formato de configuración</span>
+                    <span th:text="${detail.configFormat != null} ? ${detail.configFormat.displayName} : '—'"></span>
+                </div>
+            </div>
+        </div>
+
+        <div class="form-actions">
+            <a class="btn btn-secondary" th:href="@{/projects/{id}(id=${detail.id})}">Cancelar</a>
+            <button type="submit" class="btn btn-primary">Guardar cambios</button>
+        </div>
+    </form>
+</section>
+</body>
+</html>

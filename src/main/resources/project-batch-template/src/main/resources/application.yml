@@ -1,0 +1,18 @@
+spring:
+  application:
+    name: @artifactId@
+  datasource:
+    # Configuración de H2 en memoria
+    url: jdbc:h2:mem:batchdb;DB_CLOSE_DELAY=-1;DB_CLOSE_ON_EXIT=FALSE
+    driver-class-name: org.h2.Driver
+    username: sa
+    password: ""
+  sql:
+    init:
+      # Creación del esquema de la aplicación
+      schema-locations: classpath:schema-all.sql
+      mode: always
+  batch:
+    jdbc:
+      # Inicialización de tablas de Spring Batch en H2
+      initialize-schema: always

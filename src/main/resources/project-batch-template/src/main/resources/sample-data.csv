@@ -1,0 +1,6 @@
+1,Carlos,Gomez,carlos.gomez@example.com,Engineering,45000.00
+2,Ana,Lopez,ana.lopez@example.com,Marketing,38000.00
+3,Luis,Martinez,luis.martinez@example.com,HR,-500.00
+4,Maria,Rodriguez,maria.rodriguez@example.com,Engineering,52000.00
+5,Pedro,INVALID_SALARY,pedro@example.com,Sales,NOT_A_NUMBER
+6,Sofia,Torres,sofia.torres@example.com,Finance,41000.00

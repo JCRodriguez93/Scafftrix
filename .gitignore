@@ -1,0 +1,42 @@
+﻿# Git
+.git
+
+# IDE
+.idea
+.vscode
+.settings
+
+# Maven
+target
+.mvn
+mvnw
+mvnw.cmd
+
+# Artefactos
+*.jar
+*.war
+*.ear
+*.zip
+
+# Logs
+logs
+*.log
+*.gz
+nohup.out
+hs_err_pid*
+
+# Datos H2
+data
+workspace
+
+# Sistema
+.DS_Store
+Thumbs.db
+
+# Otros
+*.tmp
+*.bak
+*.old
+*.class
+*.swp
+*.swo

@@ -1,0 +1,46 @@
+spring:
+  application:
+    name: @artifactId@
+  datasource:
+    # Todo es configurable por variables de entorno; los valores por defecto permiten
+    # arrancar sin ninguna infraestructura externa (H2 en memoria).
+    url: ${DB_URL:jdbc:h2:mem:@artifactId@;DB_CLOSE_DELAY=-1;DB_CLOSE_ON_EXIT=FALSE}
+    username: ${DB_USERNAME:sa}
+    password: ${DB_PASSWORD:}
+    driver-class-name: ${DB_DRIVER:org.h2.Driver}
+  jpa:
+    hibernate:
+      # El esquema lo mantiene Flyway; Hibernate solo valida que las entidades encajen.
+      ddl-auto: validate
+    open-in-view: false
+  flyway:
+    enabled: true
+    locations: classpath:db/migration
+  sql:
+    init:
+      mode: never
+  jackson:
+    # Los campos opcionales sin valor no se emiten: mantiene las respuestas de la API limpias.
+    default-property-inclusion: non_null
+
+server:
+  port: ${SERVER_PORT:8080}
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: health,info
+  endpoint:
+    health:
+      show-details: when_authorized
+
+springdoc:
+  api-docs:
+    path: /v3/api-docs
+  swagger-ui:
+    path: /swagger-ui.html
+
+logging:
+  level:
+    root: INFO

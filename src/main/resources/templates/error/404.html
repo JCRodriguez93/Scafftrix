@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html lang="es" xmlns:th="http://www.thymeleaf.org"
+      th:replace="~{layout/main :: layout('Error 404 · Página no encontrada · Scafftrix', ~{::section})}">
+<head>
+    <meta charset="utf-8"/>
+    <title>Error 404 · Página no encontrada · Scafftrix</title>
+</head>
+<body>
+<section>
+    <div class="card">
+        <div class="card-header">
+            <h1 th:text="${title}">Error</h1>
+        </div>
+        <div class="card-body">
+            <p class="alert alert-error" th:text="${message}"></p>
+            <details>
+                <summary>Detalle técnico (para soporte)</summary>
+                <pre class="tech-log" th:text="${technical}"></pre>
+            </details>
+            <div class="form-actions">
+                <a class="btn btn-secondary" th:href="@{/}">Volver al dashboard</a>
+            </div>
+        </div>
+    </div>
+</section>
+</body>
+</html>

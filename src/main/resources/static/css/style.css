@@ -1,0 +1,682 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: 'Inter', system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+}
+
+@font-face {
+    font-family: 'Angels';
+    src: url('../fonts/Angels.ttf') format('truetype');
+    font-weight: 400;
+    font-style: normal;
+    font-display: swap;
+}
+
+:root {
+    --color-bg: #0f1026;
+    --color-surface: #15182b;
+    --color-card: #1f233b;
+    --color-text: #e6e7ee;
+    --color-muted: #9aa0c3;
+    --color-primary: #4f9deb;
+    --color-accent: #50e3c2;
+    --color-danger: #ff6b6b;
+    --color-border: rgba(255, 255, 255, 0.06);
+    --color-success: #7ed321;
+    /*
+     * Colour for bare text links. It cannot be --color-primary: on the card
+     * background that is 5.4:1, which is fine, but it was too close to the
+     * card to read as a link at body size. This is 8.4:1 and is only used where
+     * the link is the primary content of a cell.
+     */
+    --color-link: #8fc4f8;
+}
+
+body {
+    background: radial-gradient(circle at top, #1a1e3a, var(--color-bg));
+    color: var(--color-text);
+    line-height: 1.7;
+    min-height: 100vh;
+}
+
+.container {
+    width: min(1100px, 100% - 2rem);
+    margin: 0 auto;
+}
+
+.app-header {
+    background: rgba(21, 24, 43, 0.8);
+    backdrop-filter: blur(16px);
+    border-bottom: 1px solid var(--color-border);
+    position: sticky;
+    top: 0;
+    z-index: 10;
+}
+
+.header-inner {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 2rem;
+    padding: 1rem 0;
+}
+
+.logo {
+    display: flex;
+    align-items: center;
+    gap: 0.8rem;
+    text-decoration: none;
+    color: var(--color-text);
+    font-weight: 600;
+    font-size: 1.1rem;
+}
+
+.logo-mark {
+    width: 4rem;
+    height: 4rem;
+    display: block;
+    object-fit: contain;
+    border-radius: 6px;
+}
+
+.logo-text {
+    font-family: 'Angels', 'Inter', cursive;
+    font-size: 1.75rem;
+    font-weight: 400;
+    line-height: 1;
+    letter-spacing: 0.02em;
+}
+
+.main-nav {
+    display: flex;
+    gap: 1.2rem;
+    flex-wrap: wrap;
+}
+
+.main-nav a {
+    color: var(--color-muted);
+    text-decoration: none;
+    font-weight: 500;
+    transition: color 150ms ease;
+}
+
+.main-nav a:hover {
+    color: var(--color-text);
+}
+
+.app-main {
+    padding: 2.4rem 0 3rem;
+    display: flex;
+    flex-direction: column;
+    gap: 1.6rem;
+}
+
+.breadcrumbs {
+    display: flex;
+    align-items: center;
+    gap: 0.6rem;
+    color: var(--color-muted);
+    font-size: 0.95rem;
+}
+
+.breadcrumbs a {
+    color: var(--color-muted);
+    text-decoration: none;
+}
+
+.breadcrumbs a:hover {
+    color: var(--color-text);
+}
+
+.hero {
+    display: grid;
+    grid-template-columns: 1.2fr 1fr;
+    gap: 2rem;
+    align-items: stretch;
+    margin-bottom: 2.6rem;
+}
+
+.hero-content {
+    display: flex;
+    flex-direction: column;
+    gap: 1.4rem;
+}
+
+.hero h1 {
+    font-family: 'Angels', 'Inter', cursive;
+    font-size: 3.4rem;
+    font-weight: 400;
+    line-height: 1.1;
+    letter-spacing: 0.02em;
+}
+
+/*
+ * Titulo del portal: fuente Angels con el degradado corporativo. El color plano
+ * es el fallback para navegadores sin background-clip: text.
+ */
+.logo-text,
+.hero h1 {
+    color: var(--color-accent);
+}
+
+@supports ((background-clip: text) or (-webkit-background-clip: text)) {
+    .logo-text,
+    .hero h1 {
+        background: linear-gradient(120deg, var(--color-primary) 0%, var(--color-accent) 100%);
+        -webkit-background-clip: text;
+        background-clip: text;
+        color: transparent;
+        -webkit-text-fill-color: transparent;
+    }
+}
+
+.hero p {
+    color: var(--color-muted);
+    font-size: 1.05rem;
+}
+
+.hero-actions {
+    display: flex;
+    gap: 1rem;
+    flex-wrap: wrap;
+}
+
+.hero-card {
+    background: linear-gradient(160deg, rgba(79, 157, 235, 0.25), rgba(80, 227, 194, 0.12));
+    border: 1px solid var(--color-border);
+    border-radius: 1rem;
+    padding: 2rem;
+    display: flex;
+    flex-direction: column;
+    gap: 1.8rem;
+}
+
+.kpi-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 1.6rem;
+}
+
+.kpi {
+    display: flex;
+    flex-direction: column;
+    gap: 0.4rem;
+}
+
+.kpi-value {
+    font-size: 2.2rem;
+    font-weight: 600;
+}
+
+.kpi-label {
+    color: var(--color-muted);
+}
+
+.status-strip {
+    display: flex;
+    align-items: center;
+    gap: 0.8rem;
+    color: var(--color-muted);
+}
+
+.card {
+    background: linear-gradient(180deg, rgba(255, 255, 255, 0.02), transparent);
+    border: 1px solid var(--color-border);
+    border-radius: 1rem;
+    backdrop-filter: blur(12px);
+    overflow: hidden;
+    box-shadow: 0 40px 60px -40px rgba(79, 157, 235, 0.4);
+}
+
+.card-header {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    gap: 1rem;
+    padding: 1.8rem 2rem 0.8rem;
+    flex-wrap: wrap;
+}
+
+.card-header p {
+    color: var(--color-muted);
+    margin-top: 0.4rem;
+}
+
+.card-body {
+    padding: 1rem 2rem 2rem;
+    display: flex;
+    flex-direction: column;
+    gap: 1.6rem;
+}
+
+.actions-grid {
+    flex-direction: row;
+    flex-wrap: wrap;
+    gap: 1rem;
+}
+
+.action-card {
+    flex: 1 1 280px;
+    border: 1px solid var(--color-border);
+    border-radius: 0.8rem;
+    padding: 1.4rem;
+    text-decoration: none;
+    color: var(--color-text);
+    display: flex;
+    flex-direction: column;
+    gap: 0.6rem;
+    transition: border-color 150ms ease, transform 150ms ease;
+}
+
+.action-card:hover {
+    border-color: var(--color-primary);
+    transform: translateY(-4px);
+}
+
+.action-title {
+    font-weight: 600;
+}
+
+.action-desc {
+    color: var(--color-muted);
+}
+
+.btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.4rem;
+    border-radius: 999px;
+    border: 1px solid transparent;
+    padding: 0.8rem 1.6rem;
+    font-weight: 500;
+    text-decoration: none;
+    cursor: pointer;
+    transition: transform 150ms ease, border-color 150ms ease, background 150ms ease;
+    background: transparent;
+    color: var(--color-text);
+}
+
+.btn-primary {
+    background: linear-gradient(90deg, var(--color-primary), var(--color-accent));
+    color: #0a1026;
+    font-weight: 600;
+}
+
+.btn-secondary {
+    border-color: var(--color-border);
+}
+
+.btn-danger {
+    border-color: rgba(255, 107, 107, 0.7);
+    color: var(--color-danger);
+}
+
+.btn-danger:hover {
+    background: rgba(255, 107, 107, 0.15);
+}
+
+.btn:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+    transform: none;
+}
+
+.inline-form {
+    display: inline;
+}
+
+.btn-link {
+    border: none;
+    padding: 0.4rem 0.6rem;
+    color: var(--color-primary);
+}
+
+.btn:hover {
+    transform: translateY(-2px);
+}
+
+.btn-sm {
+    padding: 0.6rem 1.2rem;
+    font-size: 0.95rem;
+}
+
+.form-grid {
+    display: flex;
+    flex-direction: column;
+    gap: 1.8rem;
+}
+
+.grid-2 {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 1.8rem;
+}
+
+.field.full {
+    grid-column: 1 / -1;
+}
+
+.field {
+    display: flex;
+    flex-direction: column;
+    gap: 0.6rem;
+}
+
+label {
+    font-weight: 500;
+}
+
+input,
+select,
+textarea {
+    border: 1px solid var(--color-border);
+    border-radius: 0.6rem;
+    background: rgba(15, 16, 38, 0.8);
+    color: var(--color-text);
+    padding: 0.8rem 1rem;
+    font-size: 1rem;
+}
+
+input:focus,
+select:focus,
+textarea:focus {
+    outline: 2px solid rgba(79, 157, 235, 0.4);
+    border-color: var(--color-primary);
+}
+
+.field-help {
+    color: var(--color-muted);
+    font-size: 0.95rem;
+}
+
+.field-error {
+    color: var(--color-danger);
+    font-size: 0.95rem;
+}
+
+.tech-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 1.2rem;
+}
+
+.tech-item {
+    border: 1px solid var(--color-border);
+    border-radius: 0.8rem;
+    padding: 1.2rem;
+    display: flex;
+    flex-direction: column;
+    gap: 0.4rem;
+}
+
+.tech-label {
+    color: var(--color-muted);
+    text-transform: uppercase;
+    letter-spacing: 0.12em;
+    font-size: 0.85rem;
+}
+
+.tech-value {
+    font-size: 1.4rem;
+    font-weight: 600;
+}
+
+.tech-note {
+    color: var(--color-muted);
+}
+
+.form-actions {
+    display: flex;
+    justify-content: flex-end;
+    gap: 1rem;
+    flex-wrap: wrap;
+}
+
+.page-header {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    gap: 1rem;
+    margin-bottom: 1.25rem;
+}
+
+.page-subtitle {
+    margin: 0.25rem 0 0;
+    color: var(--color-muted);
+    max-width: 60ch;
+}
+
+.header-actions {
+    display: flex;
+    gap: 1rem;
+    align-items: center;
+}
+
+.badge {
+    display: inline-flex;
+    align-items: center;
+    border: 1px solid var(--color-border);
+    border-radius: 999px;
+    padding: 0.4rem 0.9rem;
+    font-size: 0.9rem;
+    color: var(--color-muted);
+}
+
+.badge-success {
+    border-color: rgba(126, 211, 33, 0.8);
+    color: var(--color-success);
+}
+
+.badge-danger {
+    border-color: rgba(255, 107, 107, 0.8);
+    color: var(--color-danger);
+}
+
+.table-wrapper {
+    overflow-x: auto;
+}
+
+.filters {
+    margin-bottom: 1.8rem;
+}
+
+.filter-grid {
+    display: grid;
+    grid-template-columns: minmax(220px, 2fr) repeat(4, minmax(130px, 1fr)) auto;
+    align-items: end;
+    gap: 1rem;
+}
+
+.filter-actions {
+    display: flex;
+    gap: 0.8rem;
+    flex-wrap: wrap;
+}
+
+.table {
+    width: 100%;
+    border-collapse: collapse;
+    min-width: 900px;
+}
+
+.table thead th {
+    text-align: left;
+    color: var(--color-muted);
+    font-weight: 500;
+    padding: 1rem 2rem;
+    border-bottom: 1px solid var(--color-border);
+}
+
+.table tbody td {
+    padding: 1rem 2rem;
+    border-bottom: 1px solid var(--color-border);
+    vertical-align: top;
+}
+
+.table-sub {
+    color: var(--color-muted);
+    font-size: 0.95rem;
+}
+
+/*
+ * The project name in the first column was an unstyled <a>, so it fell back to
+ * the browser default link colour (#0000EE) on the dark card: 1.64:1, which is
+ * below the WCAG AA minimum of 4.5:1 and effectively unreadable. Colour alone is
+ * also not what marks a link as a link, hence the underline.
+ */
+.table tbody a.project-name {
+    color: var(--color-link);
+    font-weight: 500;
+    text-decoration: underline;
+    text-decoration-thickness: 1px;
+    text-underline-offset: 0.22em;
+    text-decoration-color: rgba(143, 196, 248, 0.45);
+    transition: color 150ms ease, text-decoration-color 150ms ease;
+}
+
+.table tbody a.project-name:hover,
+.table tbody a.project-name:focus-visible {
+    color: var(--color-text);
+    text-decoration-color: currentColor;
+}
+
+/* Keyboard users must be able to see where they are; nothing else does this. */
+.table tbody a:focus-visible {
+    outline: 2px solid var(--color-link);
+    outline-offset: 3px;
+    border-radius: 2px;
+}
+
+.empty {
+    text-align: center;
+    color: var(--color-muted);
+}
+
+.actions {
+    display: flex;
+    gap: 0.6rem;
+    flex-wrap: wrap;
+}
+
+.pagination {
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+    gap: 1rem;
+    padding: 1rem 2rem 1.4rem;
+    color: var(--color-muted);
+}
+
+.disabled {
+    opacity: 0.45;
+    pointer-events: none;
+}
+
+.info-row {
+    display: flex;
+    justify-content: space-between;
+    padding-bottom: 0.8rem;
+    border-bottom: 1px solid var(--color-border);
+    color: var(--color-muted);
+}
+
+.info-row span:last-child {
+    color: var(--color-text);
+}
+
+/* <output> es inline por defecto: sin display:block la caja no ocupa sitio en el
+   flujo y se solapa con el contenido de arriba y de abajo. */
+.alert {
+    display: block;
+    box-sizing: border-box;
+    margin: 0 0 1rem;
+}
+
+.alert-error {
+    border: 1px solid rgba(255, 107, 107, 0.7);
+    border-radius: 0.8rem;
+    padding: 1rem 1.2rem;
+    color: var(--color-danger);
+    background: rgba(255, 107, 107, 0.12);
+}
+
+.alert-info {
+    border: 1px solid rgba(255, 193, 7, 0.6);
+    border-radius: 0.8rem;
+    padding: 1rem 1.2rem;
+    color: var(--color-text);
+    background: rgba(255, 193, 7, 0.12);
+}
+
+.alert-success {
+    border: 1px solid rgba(126, 211, 33, 0.7);
+    border-radius: 0.8rem;
+    padding: 1rem 1.2rem;
+    color: var(--color-text);
+    background: rgba(126, 211, 33, 0.12);
+}
+
+.log-console {
+    background: rgba(15, 16, 38, 0.9);
+    border: 1px solid var(--color-border);
+    border-radius: 0.8rem;
+    padding: 1.4rem;
+    max-height: 520px;
+    overflow-y: auto;
+    font-family: 'JetBrains Mono', 'Fira Code', monospace;
+    font-size: 0.95rem;
+    line-height: 1.8;
+    color: var(--color-text);
+}
+
+.log-status {
+    color: var(--color-muted);
+}
+
+.tabs {
+    display: flex;
+    gap: 1rem;
+    border-bottom: 1px solid var(--color-border);
+}
+
+.tab {
+    padding: 0.8rem 1.4rem;
+    color: var(--color-muted);
+    text-decoration: none;
+    border-bottom: 2px solid transparent;
+    margin-bottom: -1px;
+}
+
+.tab.active {
+    color: var(--color-text);
+    border-color: var(--color-primary);
+}
+
+.tab-panel {
+    display: none;
+}
+
+.tab-panel.active {
+    display: flex;
+    flex-direction: column;
+    gap: 1.8rem;
+}
+
+@media (max-width: 980px) {
+    .hero {
+        grid-template-columns: 1fr;
+    }
+    .grid-2 {
+        grid-template-columns: 1fr;
+    }
+    .kpi-grid {
+        grid-template-columns: repeat(2, 1fr);
+    }
+    .tech-grid {
+        grid-template-columns: 1fr;
+    }
+    .filter-grid {
+        grid-template-columns: 1fr;
+    }
+}

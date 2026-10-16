@@ -1,0 +1,251 @@
+openapi: 3.0.3
+
+info:
+  title: @name@
+  version: @version@
+  description: Contrato OpenAPI del microservicio @artifactId@. Es la fuente de verdad de la API.
+
+servers:
+  - url: /
+
+tags:
+  - name: Users
+    description: Gestion de usuarios
+  - name: Centers
+    description: Gestion de centros
+
+paths:
+
+  /users:
+    get:
+      tags: [Users]
+      operationId: getAllUsers
+      summary: Lista todos los usuarios
+      responses:
+        '200':
+          description: Lista de usuarios
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/User'
+    post:
+      tags: [Users]
+      operationId: createUser
+      summary: Crea un usuario
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/User'
+      responses:
+        '201':
+          description: Usuario creado
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/User'
+
+  /users/{id}:
+    get:
+      tags: [Users]
+      operationId: getUser
+      summary: Obtiene un usuario por id
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+            format: int64
+      responses:
+        '200':
+          description: Usuario encontrado
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/User'
+        '404':
+          description: Usuario no encontrado
+    put:
+      tags: [Users]
+      operationId: updateUser
+      summary: Actualiza un usuario
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+            format: int64
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/User'
+      responses:
+        '200':
+          description: Usuario actualizado
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/User'
+        '404':
+          description: Usuario no encontrado
+    delete:
+      tags: [Users]
+      operationId: deleteUser
+      summary: Elimina un usuario
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+            format: int64
+      responses:
+        '204':
+          description: Usuario eliminado
+        '404':
+          description: Usuario no encontrado
+
+  /centers:
+    get:
+      tags: [Centers]
+      operationId: getAllCenters
+      summary: Lista todos los centros
+      responses:
+        '200':
+          description: Lista de centros
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Center'
+    post:
+      tags: [Centers]
+      operationId: createCenter
+      summary: Crea un centro
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Center'
+      responses:
+        '201':
+          description: Centro creado
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Center'
+
+  /centers/{id}:
+    get:
+      tags: [Centers]
+      operationId: getCenter
+      summary: Obtiene un centro por id
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+            format: int64
+      responses:
+        '200':
+          description: Centro encontrado
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Center'
+        '404':
+          description: Centro no encontrado
+    put:
+      tags: [Centers]
+      operationId: updateCenter
+      summary: Actualiza un centro
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+            format: int64
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Center'
+      responses:
+        '200':
+          description: Centro actualizado
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Center'
+        '404':
+          description: Centro no encontrado
+    delete:
+      tags: [Centers]
+      operationId: deleteCenter
+      summary: Elimina un centro
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+            format: int64
+      responses:
+        '204':
+          description: Centro eliminado
+        '404':
+          description: Centro no encontrado
+
+components:
+  schemas:
+
+    User:
+      type: object
+      description: Usuario del sistema
+      required:
+        - username
+        - email
+      properties:
+        id:
+          type: integer
+          format: int64
+        username:
+          type: string
+          maxLength: 100
+        email:
+          type: string
+          maxLength: 200
+        firstName:
+          type: string
+          maxLength: 100
+        lastName:
+          type: string
+          maxLength: 100
+
+    Center:
+      type: object
+      description: Centro de trabajo
+      required:
+        - name
+      properties:
+        id:
+          type: integer
+          format: int64
+        name:
+          type: string
+          maxLength: 200
+        city:
+          type: string
+          maxLength: 100

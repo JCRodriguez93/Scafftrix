@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="es" xmlns:th="http://www.thymeleaf.org" th:fragment="layout(pageTitle, content)">
+<head>
+    <meta charset="utf-8"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1"/>
+    <title th:text="${pageTitle}">Scafftrix</title>
+    <link rel="icon" type="image/png" th:href="@{/img/logo.png}"/>
+    <link rel="stylesheet" th:href="@{/css/style.css}"/>
+    <link rel="preconnect" href="https://fonts.googleapis.com"/>
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&display=swap" rel="stylesheet"/>
+</head>
+<body>
+<header class="app-header">
+    <div class="container header-inner">
+        <a class="logo" th:href="@{/}">
+            <img class="logo-mark" th:src="@{/img/logo.png}" alt="Scafftrix"/>
+            <span class="logo-text">Scafftrix</span>
+        </a>
+        <nav class="main-nav" aria-label="Navegación principal">
+            <a th:href="@{/}">Dashboard</a>
+            <a th:href="@{/projects/new}">Crear proyecto</a>
+            <a th:href="@{/projects}">Mis proyectos</a>
+        </nav>
+    </div>
+</header>
+<main class="container app-main">
+    <nav class="breadcrumbs" aria-label="Breadcrumb">
+        <a th:href="@{/}">Inicio</a>
+        <span>/</span>
+        <span th:text="${pageTitle}">Sección</span>
+    </nav>
+    <div th:replace="${content}"></div>
+</main>
+<footer class="app-footer">
+    <div class="container footer-inner">
+        <small>Scafftrix · Software Factory corporativa · Spring Boot</small>
+    </div>
+</footer>
+<script th:src="@{/js/app.js}" defer></script>
+</body>
+</html>

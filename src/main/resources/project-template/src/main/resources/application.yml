@@ -1,0 +1,15 @@
+spring:
+  application:
+    name: @artifactId@
+  datasource:
+    url: jdbc:h2:mem:@artifactId@;DB_CLOSE_DELAY=-1
+    driver-class-name: org.h2.Driver
+    username: sa
+    password: ""
+  jpa:
+    hibernate:
+      ddl-auto: none
+    open-in-view: false
+  sql:
+    init:
+      mode: always

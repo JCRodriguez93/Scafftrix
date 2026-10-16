@@ -1,0 +1,211 @@
+openapi: 3.0.3
+
+info:
+  title: @name@
+  version: @version@
+
+servers:
+  - url: /
+
+tags:
+  - name: Empleados
+  - name: Centros
+
+paths:
+
+  /empleados:
+    get:
+      tags:
+        - Empleados
+      operationId: getAllEmpleados
+      responses:
+        '200':
+          description: Lista de empleados
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Empleado'
+    post:
+      tags:
+        - Empleados
+      operationId: createEmpleado
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Empleado'
+      responses:
+        '201':
+          description: Empleado creado
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Empleado'
+
+  /empleados/{id}:
+    get:
+      tags:
+        - Empleados
+      operationId: getEmpleado
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+      responses:
+        '200':
+          description: Empleado
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Empleado'
+    put:
+      tags:
+        - Empleados
+      operationId: updateEmpleado
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Empleado'
+      responses:
+        '200':
+          description: Empleado actualizado
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Empleado'
+    delete:
+      tags:
+        - Empleados
+      operationId: deleteEmpleado
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+      responses:
+        '204':
+          description: Empleado eliminado
+
+  /centros:
+    get:
+      tags:
+        - Centros
+      operationId: getAllCentros
+      responses:
+        '200':
+          description: Lista de centros
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Centro'
+    post:
+      tags:
+        - Centros
+      operationId: createCentro
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Centro'
+      responses:
+        '201':
+          description: Centro creado
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Centro'
+
+  /centros/{id}:
+    get:
+      tags:
+        - Centros
+      operationId: getCentro
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+      responses:
+        '200':
+          description: Centro
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Centro'
+    put:
+      tags:
+        - Centros
+      operationId: updateCentro
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Centro'
+      responses:
+        '200':
+          description: Centro actualizado
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Centro'
+    delete:
+      tags:
+        - Centros
+      operationId: deleteCentro
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+      responses:
+        '204':
+          description: Centro eliminado
+
+components:
+  schemas:
+
+    Empleado:
+      type: object
+      properties:
+        id_empleado:
+          type: integer
+        nombre:
+          type: string
+        id_centro:
+          type: integer
+        centro:
+          type: string
+
+    Centro:
+      type: object
+      properties:
+        numCentro:
+          type: integer
+        nombreCentro:
+          type: string

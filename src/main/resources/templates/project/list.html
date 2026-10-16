@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html lang="es" xmlns:th="http://www.thymeleaf.org"
+      th:replace="~{layout/main :: layout('Mis proyectos · Scafftrix', ~{::section})}">
+<head>
+    <meta charset="utf-8"/>
+    <title>Mis proyectos · Scafftrix</title>
+</head>
+<body>
+<section>
+    <div class="page-header">
+        <div>
+            <h1>Mis proyectos</h1>
+            <p>Listado de proyectos generados y pendientes de generar.</p>
+        </div>
+    </div>
+
+    <output class="alert alert-success" th:if="${deleted}">El proyecto se ha eliminado correctamente.</output>
+    <output class="alert alert-success" th:if="${updated}">El proyecto se ha actualizado correctamente.</output>
+
+    <form th:action="@{/projects}" method="get" class="card filters">
+        <div class="card-body filter-grid">
+            <div class="field">
+                <label for="search">Buscar</label>
+                <input id="search" name="search" type="search" th:value="${criteria.search}"
+                       placeholder="Nombre, artifact, group o package"/>
+            </div>
+            <div class="field">
+                <label for="type">Tipo</label>
+                <select id="type" name="type">
+                    <option value="">Todos</option>
+                    <option th:each="type : ${T(es.scafftrix.factory.domain.ProjectType).values()}"
+                            th:value="${type}" th:selected="${criteria.type == type}"
+                            th:text="${type.displayName}"></option>
+                </select>
+            </div>
+            <div class="field">
+                <label for="status">Estado</label>
+                <select id="status" name="status">
+                    <option value="">Todos</option>
+                    <option th:each="status : ${T(es.scafftrix.factory.domain.ProjectStatus).values()}"
+                            th:value="${status}" th:selected="${criteria.status == status}"
+                            th:text="${status}"></option>
+                </select>
+            </div>
+            <div class="field">
+                <label for="sort">Orden</label>
+                <select id="sort" name="sort">
+                    <option value="newest" th:selected="${criteria.isSort('newest')}">Más recientes</option>
+                    <option value="oldest" th:selected="${criteria.isSort('oldest')}">Más antiguos</option>
+                    <option value="name" th:selected="${criteria.isSort('name')}">Nombre A-Z</option>
+                    <option value="status" th:selected="${criteria.isSort('status')}">Estado</option>
+                </select>
+            </div>
+            <div class="field">
+                <label for="size">Tamaño</label>
+                <select id="size" name="size">
+                    <option value="10" th:selected="${criteria.size == 10}">10</option>
+                    <option value="20" th:selected="${criteria.size == 20}">20</option>
+                    <option value="50" th:selected="${criteria.size == 50}">50</option>
+                    <option value="100" th:selected="${criteria.size == 100}">100</option>
+                </select>
+            </div>
+            <input type="hidden" name="page" value="0"/>
+            <div class="filter-actions">
+                <a class="btn btn-secondary" th:href="@{/projects}">Limpiar</a>
+                <button type="submit" class="btn btn-primary">Aplicar</button>
+            </div>
+        </div>
+    </form>
+
+    <div class="card">
+        <div class="card-header">
+            <h2>Proyectos</h2>
+            <p th:text="${page.totalElements} + ' resultado(s)'">0 resultado(s)</p>
+        </div>
+        <div class="card-body table-wrapper">
+            <table class="table">
+                <thead>
+                <tr>
+                    <th>Proyecto</th>
+                    <th>Tipo</th>
+                    <th>Group ID</th>
+                    <th>Artifact ID</th>
+                    <th>Estado</th>
+                    <th>Fecha</th>
+                    <th>Acciones</th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr th:each="p : ${projects}">
+                    <td>
+                        <a class="project-name" th:href="@{/projects/{id}(id=${p.id})}" th:text="${p.name}"></a>
+                        <div class="table-sub" th:text="${p.packageName}"></div>
+                    </td>
+                    <td th:text="${p.projectType.displayName}"></td>
+                    <td th:text="${p.groupId}"></td>
+                    <td th:text="${p.artifactId}"></td>
+                    <td><span class="badge" th:text="${p.status}"></span></td>
+                    <td th:text="${#temporals.format(p.createdAt, 'dd/MM/yyyy HH:mm:ss')}"></td>
+                    <td>
+                        <div class="actions">
+                            <a class="btn btn-link" th:href="@{/projects/{id}(id=${p.id})}">Ver detalle</a>
+                            <a class="btn btn-link" th:href="@{/projects/{id}/edit(id=${p.id})}">Editar</a>
+                            <a th:if="${p.artifactAvailable}" class="btn btn-link"
+                               th:href="@{/projects/{id}/generation/download(id=${p.id})}">Descargar</a>
+                            <form th:action="@{/projects/{id}/delete(id=${p.id})}" method="post" class="inline-form"
+                                  th:attr="data-confirm='¿Eliminar el proyecto \'' + ${p.name} + '\'? Se borrarán también sus archivos generados. Esta acción no se puede deshacer.'">
+                                <button type="submit" class="btn btn-danger btn-sm">Eliminar</button>
+                            </form>
+                        </div>
+                    </td>
+                </tr>
+                <tr th:if="${empty}">
+                    <td colspan="7" class="empty">Aún no has creado ningún proyecto.</td>
+                </tr>
+                </tbody>
+            </table>
+        </div>
+        <div class="pagination" th:if="${page.totalPages > 1}">
+            <a class="btn btn-secondary btn-sm"
+               th:classappend="${page.first} ? ' disabled'"
+               th:href="@{/projects(search=${criteria.search},type=${criteria.type},status=${criteria.status},sort=${criteria.sort},size=${criteria.size},page=${page.number - 1})}">Anterior</a>
+            <span th:text="'Página ' + ${page.number + 1} + ' de ' + ${page.totalPages}">Página 1 de 1</span>
+            <a class="btn btn-secondary btn-sm"
+               th:classappend="${page.last} ? ' disabled'"
+               th:href="@{/projects(search=${criteria.search},type=${criteria.type},status=${criteria.status},sort=${criteria.sort},size=${criteria.size},page=${page.number + 1})}">Siguiente</a>
+        </div>
+    </div>
+</section>
+</body>
+</html>

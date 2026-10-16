@@ -1,0 +1,150 @@
+<!DOCTYPE html>
+<html lang="es" xmlns:th="http://www.thymeleaf.org"
+      th:replace="~{layout/main :: layout('Proyecto · ' + ${detail.name} + ' · Scafftrix', ~{::section})}">
+<head>
+    <meta charset="utf-8"/>
+    <title>Proyecto · Scafftrix</title>
+</head>
+<body>
+<section>
+    <div class="page-header">
+        <div>
+            <h1 th:text="${detail.name}">Proyecto</h1>
+            <p class="page-subtitle" th:text="${#strings.isEmpty(detail.description)} ? 'Sin descripción' : ${detail.description}"></p>
+        </div>
+        <div class="header-actions">
+            <span class="badge"
+                  th:classappend="${detail.status.name() == 'GENERATED' ? 'badge-success' : (detail.status.name() == 'FAILED' ? 'badge-danger' : '')}"
+                  th:text="${detail.status}">CREATED</span>
+            <form th:if="${detail.status.name() == 'CREATED' || detail.status.name() == 'FAILED'}"
+                  th:action="@{/projects/{id}/generation(id=${detail.id})}" method="post">
+                <button type="submit" class="btn btn-primary">Generar proyecto</button>
+            </form>
+            <a th:if="${detail.artifactAvailable}" class="btn btn-secondary"
+               th:href="@{/projects/{id}/generation/download(id=${detail.id})}">Descargar ZIP</a>
+            <a class="btn btn-secondary" th:href="@{/projects/{id}/edit(id=${detail.id})}">Editar</a>
+            <form th:action="@{/projects/{id}/delete(id=${detail.id})}" method="post" class="inline-form"
+                  th:attr="data-confirm='¿Eliminar el proyecto \'' + ${detail.name} + '\'? Se borrarán también sus archivos generados. Esta acción no se puede deshacer.'">
+                <button type="submit" class="btn btn-danger">Eliminar</button>
+            </form>
+        </div>
+    </div>
+
+    <output class="alert alert-success" th:if="${created}">
+        El proyecto se ha creado correctamente. Pulsa «Generar proyecto» para obtener el ZIP
+        (~15 s); la página se actualizará sola.
+    </output>
+    <output class="alert alert-success" th:if="${updated}">El proyecto se ha actualizado correctamente.</output>
+
+    <p class="alert alert-info"
+       th:if="${created == null && updated == null && !detail.artifactAvailable && detail.status.name() == 'CREATED'}">
+        Este proyecto aún no se ha generado: pulsa «Generar proyecto» para obtener el ZIP.
+    </p>
+
+    <div class="tabs" role="tablist">
+        <a href="#resumen" class="tab active" data-tab="resumen">Resumen</a>
+        <a href="#logs" class="tab" data-tab="logs" id="tab-logs">Logs de generación</a>
+    </div>
+
+    <div class="tab-panel active" id="panel-resumen">
+        <div class="card">
+            <div class="card-header">
+                <h2>Información general</h2>
+            </div>
+            <div class="card-body grid-2">
+                <div class="info-row"><span>Nombre</span><span th:text="${detail.name}"></span></div>
+                <div class="info-row"><span>Tipo de proyecto</span><span th:text="${detail.projectType.displayName}"></span></div>
+                <div class="info-row"><span>Estado</span><span th:text="${detail.status}"></span></div>
+                <div class="info-row"><span>Creado</span><span th:text="${#temporals.format(detail.createdAt, 'dd/MM/yyyy HH:mm:ss')}"></span></div>
+                <div class="info-row"><span>Última actualización</span><span th:text="${#temporals.format(detail.updatedAt, 'dd/MM/yyyy HH:mm:ss')}"></span></div>
+            </div>
+        </div>
+
+        <div class="card">
+            <div class="card-header">
+                <h2>Información Maven</h2>
+            </div>
+            <div class="card-body grid-2">
+                <div class="info-row"><span>Group ID</span><span th:text="${detail.groupId}"></span></div>
+                <div class="info-row"><span>Artifact ID</span><span th:text="${detail.artifactId}"></span></div>
+                <div class="info-row"><span>Base name</span><span th:text="${detail.baseName}"></span></div>
+                <div class="info-row"><span>Package</span><span th:text="${detail.packageName}"></span></div>
+                <div class="info-row"><span>Version</span><span th:text="${detail.version}"></span></div>
+            </div>
+        </div>
+
+        <div class="card">
+            <div class="card-header">
+                <h2>Configuración técnica</h2>
+            </div>
+            <div class="card-body grid-2">
+                <div class="info-row">
+                    <span>Versión de Spring Boot</span>
+                    <span th:text="${detail.springBootVersion} ?: '—'"></span>
+                </div>
+                <div class="info-row">
+                    <span>Formato de configuración</span>
+                    <span th:text="${detail.configFormat != null} ? ${detail.configFormat.displayName} : '—'"></span>
+                </div>
+            </div>
+            <div class="card-body">
+                <div class="tech-grid">
+                    <div class="tech-item">
+                        <span class="tech-label">Base de datos</span>
+                        <span class="tech-value" th:text="${stack.database}">H2</span>
+                    </div>
+                    <div class="tech-item">
+                        <span class="tech-label">Frontend</span>
+                        <span class="tech-value"
+                              th:text="${#strings.isEmpty(stack.frontend)} ? 'Sin frontend' : ${stack.frontend}">—</span>
+                    </div>
+                    <div class="tech-item">
+                        <span class="tech-label">Herramienta de build</span>
+                        <span class="tech-value" th:text="${stack.buildTool}">Maven</span>
+                    </div>
+                    <div class="tech-item">
+                        <span class="tech-label">Contract-first</span>
+                        <span class="tech-value" th:text="${detail.projectType.contractFirst} ? 'Sí' : 'No'">—</span>
+                    </div>
+                </div>
+                <p class="tech-note" th:text="${detail.projectType.technologyNote}"></p>
+            </div>
+        </div>
+
+        <div class="card" th:if="${detail.failureReason}">
+            <div class="card-header">
+                <h2>Error de generación</h2>
+            </div>
+            <div class="card-body">
+                <p class="alert alert-error" th:text="${detail.failureReason}"></p>
+            </div>
+        </div>
+    </div>
+
+    <div class="tab-panel" id="panel-logs">
+        <div class="card">
+            <div class="card-header">
+                <h2>Progreso de generación</h2>
+                <div class="header-actions">
+                    <button class="btn btn-secondary btn-sm" id="refresh-logs">Actualizar</button>
+                </div>
+            </div>
+            <div class="card-body">
+                <pre id="log-console" class="log-console"></pre>
+                <div id="log-status" class="log-status"></div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Los scripts deben ir dentro de <section>: el layout inserta solo ese
+         fragmento (~{::section}) y descarta lo que quede fuera. -->
+    <script th:inline="javascript">
+    /*<![CDATA[*/
+        window.projectId = /*[[${detail.id}]]*/ 'id';
+        window.projectStatus = /*[[${detail.status}]]*/ 'CREATED';
+    /*]]>*/
+    </script>
+    <script th:src="@{/js/logs.js}" defer></script>
+</section>
+</body>
+</html>

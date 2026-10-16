@@ -1,0 +1,56 @@
+# Scafftrix - despliegue por contenedor (opcion C).
+#
+# En el host no hace falta Node, ni JHipster, ni Maven, ni JDK: todo esta
+# dentro de la imagen. La imagen tampoco lleva Node ni JHipster: los perfiles
+# se generan desde las plantillas empaquetadas en el JAR.
+#
+#   docker compose build
+#   docker compose up -d
+#   docker compose logs -f scafftrix
+#
+# Persistencia (esto es lo que faltaba y hacia que `docker compose down`
+# tirase todo el historial):
+#   workspace-data  -> proyectos generados (codigo fuente + ZIP)
+#   ./data          -> base de datos H2 del portal
+#   ./logs          -> logs de la aplicacion
+
+services:
+  scafftrix:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    image: scafftrix:local
+    container_name: scafftrix
+    ports:
+      - "8090:8090"
+    environment:
+      # El workspace vive fuera de /app para que el codigo de la aplicacion
+      # (de solo lectura en la imagen) no se mezcle con los proyectos.
+      SCAFFTRIX_WORKSPACE_PATH: /opt/scafftrix/workspace
+      LANG: C.UTF-8
+    volumes:
+      - workspace-data:/opt/scafftrix/workspace
+      - ./data:/app/data
+      - ./logs:/app/logs
+    # Endurecimiento del contenedor:
+    #   no-new-privileges -> nada puede recuperar privilegios tras el arranque
+    #   read_only          -> el sistema de ficheros de la imagen es de solo
+    #                         lectura; solo escriben los volumenes y tmpfs
+    #   tmpfs /tmp         -> lo que la JVM necesite escribir fuera de los
+    #                           volumenes (temporales)
+    security_opt:
+      - no-new-privileges:true
+    read_only: true
+    tmpfs:
+      - /tmp
+    restart: unless-stopped
+    stop_grace_period: 30s
+    healthcheck:
+      test: ["CMD", "curl", "-fsS", "http://localhost:8090/actuator/health"]
+      interval: 30s
+      timeout: 5s
+      retries: 3
+      start_period: 60s
+
+volumes:
+  workspace-data:
