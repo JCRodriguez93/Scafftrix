@@ -1,0 +1,25 @@
+# Maven
+target/
+
+# IDE
+.idea/
+*.iml
+.vscode/
+.settings/
+.classpath
+.project
+
+# Sistema
+.DS_Store
+Thumbs.db
+
+# Registros (el monolito escribe logs/ por defecto vía logback)
+*.log
+logs/
+
+# H2 en fichero (las plantillas usan H2 en memoria; si se pasa a fichero, aquí cae)
+*.mv.db
+*.trace.db
+
+# Secretos locales (.env de docker compose, credenciales, ...)
+.env

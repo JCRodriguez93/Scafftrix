@@ -82,6 +82,19 @@
                 <artifactId>spring-boot-maven-plugin</artifactId>
             </plugin>
             <!--
+                maven-jar-plugin aplica por defecto su lista DEFAULT_EXCLUDES, que
+                incluye **/.gitignore: sin esto, el .gitignore de cada plantilla se
+                queda fuera del JAR y el proyecto generado sale sin el.
+                addDefaultExcludes=false desactiva esa lista por defecto.
+            -->
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-jar-plugin</artifactId>
+                <configuration>
+                    <addDefaultExcludes>false</addDefaultExcludes>
+                </configuration>
+            </plugin>
+            <!--
                 Cobertura en cada `mvn verify`: prepara el agente y escribe el
                 informe en target/site/jacoco/jacoco.xml (HTML + XML). Es la unica
                 comprobacion de cobertura del proyecto.
