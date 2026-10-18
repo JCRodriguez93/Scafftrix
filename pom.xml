@@ -65,6 +65,17 @@
     </dependencies>
 
     <build>
+        <!-- Spring Boot (el parent) habilita resource filtering sobre application*.{yml,properties}
+             con el delimitador @. Eso reescribiría @artifactId@ -> "scafftrix" dentro de los
+             application.* de las plantillas, que DEBEN conservar el token para que
+             TemplateProjectGenerator.render() lo sustituya en tiempo de generación.
+             Desactivamos el filtrado: los recursos se copian tal cual. -->
+        <resources>
+            <resource>
+                <directory>src/main/resources</directory>
+                <filtering>false</filtering>
+            </resource>
+        </resources>
         <plugins>
             <plugin>
                 <groupId>org.springframework.boot</groupId>

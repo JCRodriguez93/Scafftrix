@@ -24,10 +24,12 @@
     </properties>
 
     <dependencies>
-        <!-- Spring Batch Core -->
+        <!-- Spring Batch con arranque JDBC del JobRepository: tablas BATCH_*, historial y reinicios.
+             En Spring Boot 4 el soporte JDBC de Batch se separó a spring-boot-starter-batch-jdbc;
+             con solo spring-boot-starter-batch se usa ResourcelessJobRepository (sin persistencia). -->
         <dependency>
             <groupId>org.springframework.boot</groupId>
-            <artifactId>spring-boot-starter-batch</artifactId>
+            <artifactId>spring-boot-starter-batch-jdbc</artifactId>
         </dependency>
 
         <!-- JDBC Driver para la base de datos embebida (Repository de Batch + Persistencia local) -->

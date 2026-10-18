@@ -6,7 +6,7 @@ API se genera a partir de el.
 
 ## Stack
 
-- Java 17 y Spring Boot 3.4.x
+- Java 17 y Spring Boot @springBootVersion@
 - Maven
 - OpenAPI Generator (interfaces y modelos de la API a partir de `contract/api.yaml`)
 - MapStruct (mapeo entre capas)

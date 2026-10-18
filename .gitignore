@@ -18,16 +18,18 @@ mvnw.cmd
 *.ear
 *.zip
 
-# Logs
-logs
+# Logs (solo en la raíz: 'logs' sin anclar se comía también
+# src/main/java/.../factory/workspace y ningún paquete Java debe
+# depender de un nombre de carpeta de datos)
+/logs
 *.log
 *.gz
 nohup.out
 hs_err_pid*
 
-# Datos H2
-data
-workspace
+# Datos en tiempo de ejecución (raíz)
+/data
+/workspace
 
 # Sistema
 .DS_Store
