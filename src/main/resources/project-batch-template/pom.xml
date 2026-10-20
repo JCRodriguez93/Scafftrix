@@ -43,6 +43,13 @@
             <scope>runtime</scope>
         </dependency>
 
+        <!-- Logging estructurado JSON para ELK/Splunk/Datadog/Grafana -->
+        <dependency>
+            <groupId>net.logstash.logback</groupId>
+            <artifactId>logstash-logback-encoder</artifactId>
+            <version>8.0</version>
+        </dependency>
+
         <!-- Pruebas unitarias básicas -->
         <dependency>
             <groupId>org.springframework.boot</groupId>
