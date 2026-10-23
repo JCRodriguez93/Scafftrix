@@ -110,6 +110,9 @@
                                 <useTags>true</useTags>
                                 <useSpringBoot4>true</useSpringBoot4>
                                 <useJackson3>true</useJackson3>
+                                <dateLibrary>java8</dateLibrary>
+                                <useOffsetDateTime>false</useOffsetDateTime>
+                                <useOptional>false</useOptional>
                                 <openApiNullable>false</openApiNullable>
                                 <skipTests>true</skipTests>
                             </configOptions>
